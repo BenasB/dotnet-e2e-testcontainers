@@ -12,22 +12,22 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapPost("/add", (int a, int b, IHttpClientFactory clientFactory) =>
+app.MapGet("/add", async (int a, int b, IHttpClientFactory clientFactory) =>
 {
     var result = a + b;
 
     var historyClient = clientFactory.CreateClient("History");
-    historyClient.PostAsJsonAsync("remember", new HistoryEntry("add", result));
+    await historyClient.PostAsJsonAsync("remember", new {Operation = "add", result });
 
     return result;
 });
 
-app.MapPost("/subtract", (int a, int b, IHttpClientFactory clientFactory) =>
+app.MapGet("/subtract", async (int a, int b, IHttpClientFactory clientFactory) =>
 {
     var result = a - b;
 
     var historyClient = clientFactory.CreateClient("History");
-    historyClient.PostAsJsonAsync("remember", new HistoryEntry("subtract", result));
+    await historyClient.PostAsJsonAsync("remember", new { Operation = "subtract", result });
 
     return result;
 });
